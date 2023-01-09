@@ -1,0 +1,3291 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Ponto Connect",
+    "version": "2",
+    "description": "For more info, please refer to the documentation: https://documentation.ibanity.com/ponto-connect/"
+  },
+  "servers": [
+    {
+      "url": "https://api.ibanity.com/ponto-connect"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "listAccounts",
+        "summary": "List Accounts",
+        "responses": {
+          "200": {
+            "description": "account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/account_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"authorizationExpirationExpectedAt\":\"2022-12-25T13:02:18.103Z\",\"authorizedAt\":\"2022-09-26T13:02:18.103Z\",\"availableBalance\":-527.34,\"availableBalanceChangedAt\":\"2022-09-26T13:12:40.839Z\",\"availableBalanceReferenceDate\":\"2022-09-23T00:00:00.000Z\",\"availableBalanceVariationObservedAt\":\"2022-09-26T13:12:40.868Z\",\"currency\":\"EUR\",\"currentBalance\":-527.34,\"currentBalanceChangedAt\":\"2022-09-26T13:12:40.839Z\",\"currentBalanceReferenceDate\":\"2022-09-23T00:00:00.000Z\",\"currentBalanceVariationObservedAt\":\"2022-09-26T13:12:40.868Z\",\"deprecated\":false,\"description\":\"Libero nostrum perferendis.\",\"holderName\":null,\"internalReference\":\"c6283304-6c87-49c7-9f67-4b7d8ee71eb8\",\"product\":null,\"reference\":\"BE07626550616261\",\"referenceType\":\"IBAN\",\"subtype\":\"checking\"},\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"meta\":{\"availability\":\"available\",\"latestSynchronization\":{\"attributes\":{\"createdAt\":\"2022-09-26T13:12:40.746Z\",\"customerOnline\":true,\"errors\":[],\"resourceId\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"resourceType\":\"account\",\"status\":\"success\",\"subtype\":\"accountDetails\",\"updatedAt\":\"2022-09-26T13:12:40.926Z\"},\"id\":\"5d88f702-fab3-4967-878c-01f1bd990235\",\"type\":\"synchronization\"},\"synchronizedAt\":\"2022-09-26T13:12:40.926Z\"},\"relationships\":{\"financialInstitution\":{\"data\":{\"id\":\"9251e765-bfbe-48b0-a082-3b043c386131\",\"type\":\"financialInstitution\"},\"links\":{\"related\":\"https://api.development.ibanity.net/ponto-connect/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131\"}},\"transactions\":{\"links\":{\"meta\":{\"type\":\"transaction\"},\"related\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03/transactions\"}}},\"type\":\"account\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/accounts?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/accounts?page[after]=0df6d359-a2fb-4f41-bc4c-3c824d8a1a03&page[limit]=1\"},\"meta\":{\"paging\":{\"after\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"limit\":1}}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the account resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the account resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/bulk-payments": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Bulk Payment"
+        ],
+        "operationId": "createBulkPayment",
+        "summary": "Create Bulk Payment",
+        "responses": {
+          "201": {
+            "description": "bulkPayment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bulkPayment_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"batchBookingPreferred\":true,\"reference\":\"Invoice Payments\",\"requestedExecutionDate\":\"2023-05-05\",\"status\":\"unsigned\"},\"id\":\"51bb2eca-559c-42b7-8427-cb2e91342a28\",\"links\":{\"redirect\":\"https://authorize.development.myponto.net/organizations/dd311734-9762-457e-989f-03292a1e55c9/sandbox/integrations/ad15e188-9385-44ef-a641-1cce3852c520/accounts/1030c604-f5ae-4699-933a-13692c28e91c/bulk-payments/51bb2eca-559c-42b7-8427-cb2e91342a28\"},\"type\":\"bulkPayment\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reference": {
+                    "description": "Your identifier for the bulk payment, displayed to the user in the Ponto dashboard",
+                    "type": "string"
+                  },
+                  "redirectUri": {
+                    "description": "URI that your user will be redirected to at the end of the authorization flow.</a>",
+                    "type": "string"
+                  },
+                  "requestedExecutionDate": {
+                    "description": "A date in the future when the payment is requested to be executed. The availability of this feature depends on each financial institution. See <a href='https://documentation.ibanity.com/ponto-connect/api#financial-institution-attributes'>financial institution attributes</a>. Note that it is not possible to simulate the delayed execution of a payment with the sandbox.",
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "batchBookingPreferred": {
+                    "description": "<p>Indicates whether the bulk payment transactions should be grouped into one booking entry by the financial institution instead of individual transactions.</p><p>This is a preference that may or may not be taken into account by the financial institution based on availability and the customer's bulk payment contract.</p><p>Defaults to <code>false</code></p>",
+                    "type": "boolean"
+                  },
+                  "payments": {
+                    "description": "<p>List of payment attribute objects to be included in the bulk payment.</p><p>Required attributes are <code>currency</code> (currently must be <code>EUR</code>), <code>amount</code>, <code>creditorName</code>, <code>creditorAccountReference</code>, and <code>creditorAccountReferenceType</code>.</p><p>Optional attributes are <code>remittanceInformation</code>, <code>remittanceInformationType</code>, <code>creditorAgent</code>, and <code>creditorAgentType</code>.</p><p>For more information see the <a href='https://documentation.ibanity.com/ponto-connect/api#create-payment-attributes'>create payment attributes</a></p>",
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": [
+                  "reference",
+                  "payments"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "bulkPayment",
+                  "attributes": {
+                    "reference": "Invoice Payments",
+                    "redirectUri": "https://fake-tpp.com/payment-confirmation?payment=123",
+                    "requestedExecutionDate": "2023-05-05",
+                    "batchBookingPreferred": true,
+                    "payments": [
+                      {
+                        "remittanceInformation": "payment 1",
+                        "remittanceInformationType": "unstructured",
+                        "currency": "EUR",
+                        "amount": 59,
+                        "creditorName": "Alex Creditor",
+                        "creditorAccountReference": "BE55732022998044",
+                        "creditorAccountReferenceType": "IBAN",
+                        "creditorAgent": "NBBEBEBB203",
+                        "creditorAgentType": "BIC"
+                      },
+                      {
+                        "remittanceInformation": "payment 2",
+                        "remittanceInformationType": "unstructured",
+                        "currency": "EUR",
+                        "amount": 25,
+                        "creditorName": "Pat Smith",
+                        "creditorAccountReference": "BE73055155935764",
+                        "creditorAccountReferenceType": "IBAN",
+                        "creditorAgent": "NBBEBEBB203",
+                        "creditorAgentType": "BIC"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/bulk-payments/{id}": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Bulk Payment"
+        ],
+        "operationId": "getBulkPayment",
+        "summary": "Get Bulk Payment",
+        "responses": {
+          "200": {
+            "description": "bulkPayment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bulkPayment_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"batchBookingPreferred\":false,\"reference\":\"Invoice collection\",\"requestedExecutionDate\":\"2025-05-05\",\"status\":\"unsigned\"},\"id\":\"8cb41fed-2a26-4eea-9c5b-00909690075e\",\"type\":\"bulkPayment\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Bulk Payment"
+        ],
+        "operationId": "deleteBulkPayment",
+        "summary": "Delete Bulk Payment",
+        "responses": {
+          "200": {
+            "description": "bulkPayment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/bulkPayment_single"
+                },
+                "example": "{\"data\":{\"id\":\"8cb41fed-2a26-4eea-9c5b-00909690075e\",\"type\":\"bulkPayment\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/payments": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "operationId": "createPayment",
+        "summary": "Create Payment",
+        "responses": {
+          "201": {
+            "description": "payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payment_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"amount\":59.0,\"creditorAccountReference\":\"BE55732022998044\",\"creditorAccountReferenceType\":\"IBAN\",\"creditorAgent\":\"NBBEBEBB203\",\"creditorAgentType\":\"BIC\",\"creditorName\":\"Alex Creditor\",\"currency\":\"EUR\",\"remittanceInformation\":\"payment\",\"remittanceInformationType\":\"unstructured\",\"requestedExecutionDate\":\"2023-05-05\",\"status\":\"unsigned\"},\"id\":\"28c46d95-385e-4af7-a577-ab08915f8ebf\",\"links\":{\"redirect\":\"https://authorize.development.myponto.net/organizations/dd311734-9762-457e-989f-03292a1e55c9/sandbox/integrations/ad15e188-9385-44ef-a641-1cce3852c520/accounts/1030c604-f5ae-4699-933a-13692c28e91c/payments/28c46d95-385e-4af7-a577-ab08915f8ebf\"},\"type\":\"payment\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "remittanceInformation": {
+                    "description": "Content of the remittance information (aka communication). Limited to 140 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution.",
+                    "type": "string"
+                  },
+                  "remittanceInformationType": {
+                    "description": "Type of remittance information, can be <code>structured</code> or <code>unstructured</code>",
+                    "type": "string"
+                  },
+                  "requestedExecutionDate": {
+                    "description": "A date in the future when the payment is requested to be executed. The availability of this feature depends on each financial institution. See <a href='https://documentation.ibanity.com/ponto-connect/api#financial-institution-attributes'>financial institution attributes</a>. Note that it is not possible to simulate the delayed execution of a payment with the sandbox.",
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "currency": {
+                    "description": "Currency of the payment, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                    "type": "string"
+                  },
+                  "amount": {
+                    "description": "Amount of the payment.",
+                    "type": "number"
+                  },
+                  "creditorName": {
+                    "description": "Name of the payee. Limited to 60 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution.",
+                    "type": "string"
+                  },
+                  "creditorAccountReference": {
+                    "description": "Financial institution's internal reference for the payee's account",
+                    "type": "string"
+                  },
+                  "creditorAccountReferenceType": {
+                    "description": "Type of payee's account reference, currently must be <code>IBAN</code>",
+                    "type": "string"
+                  },
+                  "creditorAgent": {
+                    "description": "Reference to the financial institution",
+                    "type": "string"
+                  },
+                  "creditorAgentType": {
+                    "description": "Type of financial institution reference, currently must be <code>BIC</code>",
+                    "type": "string"
+                  },
+                  "redirectUri": {
+                    "description": "URI that your user will be redirected to at the end of the authorization flow</a>",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "currency",
+                  "amount",
+                  "creditorName",
+                  "creditorAccountReference",
+                  "creditorAccountReferenceType"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "payment",
+                  "attributes": {
+                    "remittanceInformation": "payment",
+                    "remittanceInformationType": "unstructured",
+                    "requestedExecutionDate": "2023-05-05",
+                    "currency": "EUR",
+                    "amount": 59,
+                    "creditorName": "Alex Creditor",
+                    "creditorAccountReference": "BE55732022998044",
+                    "creditorAccountReferenceType": "IBAN",
+                    "creditorAgent": "NBBEBEBB203",
+                    "creditorAgentType": "BIC",
+                    "redirectUri": "https://fake-tpp.com/payment-confirmation?payment=123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/payments/{id}": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "operationId": "getPayment",
+        "summary": "Get Payment",
+        "responses": {
+          "200": {
+            "description": "payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payment_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"amount\":59.0,\"creditorAccountReference\":\"BE84732645584359\",\"creditorAccountReferenceType\":\"IBAN\",\"creditorAgent\":null,\"creditorAgentType\":null,\"creditorName\":\"Alex Creditor\",\"currency\":\"EUR\",\"remittanceInformation\":null,\"remittanceInformationType\":null,\"requestedExecutionDate\":null,\"status\":\"unsigned\"},\"id\":\"079f91ae-cdf4-4237-8878-cb7fd5893ec5\",\"type\":\"payment\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Payment"
+        ],
+        "operationId": "deletePayment",
+        "summary": "Delete Payment",
+        "responses": {
+          "200": {
+            "description": "payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payment_single"
+                },
+                "example": "{\"data\":{\"id\":\"079f91ae-cdf4-4237-8878-cb7fd5893ec5\",\"type\":\"payment\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/reauthorization-requests": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Reauthorization Request"
+        ],
+        "operationId": "requestAccountReauthorization",
+        "summary": "Request Account Reauthorization",
+        "responses": {
+          "201": {
+            "description": "reauthorizationRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reauthorizationRequest_single"
+                },
+                "example": "{\"data\":{\"attributes\":{},\"id\":\"32f2e1ce-d372-4e3a-9613-049b8c7e5bfe\",\"links\":{\"redirect\":\"https://authorize.development.myponto.net/organizations/dd311734-9762-457e-989f-03292a1e55c9/sandbox/integrations/ad15e188-9385-44ef-a641-1cce3852c520/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03/reauthorization-requests/32f2e1ce-d372-4e3a-9613-049b8c7e5bfe\"},\"type\":\"reauthorizationRequest\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "redirectUri": {
+                    "description": "URI that your user will be redirected to at the end of the authorization flow</a>",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "redirectUri"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "reauthorizationRequest",
+                  "attributes": {
+                    "redirectUri": "https://fake-tpp.com/account-reauthorization-confirmation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/transactions": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "listTransactions",
+        "summary": "List Transactions",
+        "responses": {
+          "200": {
+            "description": "transaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/transaction_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"additionalInformation\":\"Online payment on bestmarket.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"cardReference\":null,\"cardReferenceType\":null,\"counterpartName\":null,\"counterpartReference\":\"BE23732688626491\",\"createdAt\":\"2022-09-26T13:12:51.546Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Big Cotton JACKET\",\"digest\":\"b9ed9ae3d4b18e8263019376c0d96363645fa7329a295fd97860f7a352a84af5\",\"endToEndId\":\"028c0a165d57481b90f83e65558eaac3\",\"executionDate\":\"2022-09-23T00:00:00.000Z\",\"fee\":null,\"internalReference\":\"a4b13974-6e71-4aff-992e-c52114d3d708\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12345\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"BIGGER NEW JACKET\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:13:03.072Z\",\"valueDate\":\"2022-09-23T00:00:00.000Z\"},\"id\":\"3e883ad5-9d60-4896-834b-70897a6f2236\",\"relationships\":{\"account\":{\"data\":{\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"type\":\"account\"},\"links\":{\"related\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\"}}},\"type\":\"transaction\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03/transactions?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03/transactions?page[after]=3e883ad5-9d60-4896-834b-70897a6f2236&page[limit]=1\"},\"meta\":{\"latestSynchronization\":{\"attributes\":{\"createdAt\":\"2022-09-26T13:13:02.867Z\",\"customerOnline\":true,\"errors\":[],\"resourceId\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"resourceType\":\"account\",\"status\":\"success\",\"subtype\":\"accountTransactions\",\"updatedAt\":\"2022-09-26T13:13:03.106Z\"},\"id\":\"9b549e54-f3ea-4cfa-88b3-216c43228cfa\",\"type\":\"synchronization\"},\"paging\":{\"after\":\"3e883ad5-9d60-4896-834b-70897a6f2236\",\"before\":null,\"limit\":1},\"synchronizedAt\":\"2022-09-26T13:13:03.106Z\"}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the transaction resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the transaction resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{accountId}/transactions/{id}": {
+      "parameters": [
+        {
+          "name": "accountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "getTransaction",
+        "summary": "Get Transaction",
+        "responses": {
+          "200": {
+            "description": "transaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/transaction_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"additionalInformation\":\"Online payment on bestmarket.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"cardReference\":null,\"cardReferenceType\":null,\"counterpartName\":null,\"counterpartReference\":\"BE23732688626491\",\"createdAt\":\"2022-09-26T13:12:51.546Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Big Cotton JACKET\",\"digest\":\"b9ed9ae3d4b18e8263019376c0d96363645fa7329a295fd97860f7a352a84af5\",\"endToEndId\":\"028c0a165d57481b90f83e65558eaac3\",\"executionDate\":\"2022-09-23T00:00:00.000Z\",\"fee\":null,\"internalReference\":\"a4b13974-6e71-4aff-992e-c52114d3d708\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12345\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"BIGGER NEW JACKET\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:13:03.072Z\",\"valueDate\":\"2022-09-23T00:00:00.000Z\"},\"id\":\"3e883ad5-9d60-4896-834b-70897a6f2236\",\"relationships\":{\"account\":{\"data\":{\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"type\":\"account\"},\"links\":{\"related\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\"}}},\"type\":\"transaction\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/accounts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "getAccount",
+        "summary": "Get Account",
+        "responses": {
+          "200": {
+            "description": "account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/account_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"authorizationExpirationExpectedAt\":\"2022-12-25T13:02:18.103Z\",\"authorizedAt\":\"2022-09-26T13:02:18.103Z\",\"availableBalance\":-527.34,\"availableBalanceChangedAt\":\"2022-09-26T13:12:40.839Z\",\"availableBalanceReferenceDate\":\"2022-09-23T00:00:00.000Z\",\"availableBalanceVariationObservedAt\":\"2022-09-26T13:12:40.868Z\",\"currency\":\"EUR\",\"currentBalance\":-527.34,\"currentBalanceChangedAt\":\"2022-09-26T13:12:40.839Z\",\"currentBalanceReferenceDate\":\"2022-09-23T00:00:00.000Z\",\"currentBalanceVariationObservedAt\":\"2022-09-26T13:12:40.868Z\",\"deprecated\":false,\"description\":\"Libero nostrum perferendis.\",\"holderName\":null,\"internalReference\":\"c6283304-6c87-49c7-9f67-4b7d8ee71eb8\",\"product\":null,\"reference\":\"BE07626550616261\",\"referenceType\":\"IBAN\",\"subtype\":\"checking\"},\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"meta\":{\"availability\":\"available\",\"latestSynchronization\":{\"attributes\":{\"createdAt\":\"2022-09-26T13:12:40.746Z\",\"customerOnline\":true,\"errors\":[],\"resourceId\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"resourceType\":\"account\",\"status\":\"success\",\"subtype\":\"accountDetails\",\"updatedAt\":\"2022-09-26T13:12:40.926Z\"},\"id\":\"5d88f702-fab3-4967-878c-01f1bd990235\",\"type\":\"synchronization\"},\"synchronizedAt\":\"2022-09-26T13:12:40.926Z\"},\"relationships\":{\"financialInstitution\":{\"data\":{\"id\":\"9251e765-bfbe-48b0-a082-3b043c386131\",\"type\":\"financialInstitution\"},\"links\":{\"related\":\"https://api.development.ibanity.net/ponto-connect/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131\"}},\"transactions\":{\"links\":{\"meta\":{\"type\":\"transaction\"},\"related\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03/transactions\"}}},\"type\":\"account\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "revokeAccount",
+        "summary": "Revoke Account",
+        "responses": {
+          "200": {
+            "description": "account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/account_single"
+                },
+                "example": "{\"data\":{\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"type\":\"account\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/financial-institutions": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "Financial Institution"
+        ],
+        "operationId": "listOrganizationFinancialInstitutions",
+        "summary": "List Organization Financial Institutions",
+        "responses": {
+          "200": {
+            "description": "financialInstitution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitution_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"bic\":\"NBBEBEBB203\",\"bulkPaymentsEnabled\":true,\"bulkPaymentsProductTypes\":[\"sepaCreditTransfer\"],\"country\":\"BE\",\"deprecated\":false,\"futureDatedPaymentsAllowed\":true,\"logoUrl\":\"https://ibanity-production-financial-institution-assets.s3.eu-central-1.amazonaws.com/sandbox.svg\",\"maintenanceFrom\":null,\"maintenanceTo\":null,\"maintenanceType\":null,\"name\":\"Super Sandbox Bank\",\"paymentsEnabled\":true,\"paymentsProductTypes\":[\"sepaCreditTransfer\"],\"periodicPaymentsEnabled\":true,\"periodicPaymentsProductTypes\":[\"sepaCreditTransfer\"],\"primaryColor\":\"#7d39ff\",\"secondaryColor\":\"#3DF2C2\",\"sharedBrandName\":null,\"sharedBrandReference\":null,\"status\":\"stable\"},\"id\":\"9251e765-bfbe-48b0-a082-3b043c386131\",\"type\":\"financialInstitution\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/financial-institutions?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/financial-institutions?page[after]=9251e765-bfbe-48b0-a082-3b043c386131&page[limit]=1\"},\"meta\":{\"paging\":{\"after\":\"9251e765-bfbe-48b0-a082-3b043c386131\",\"limit\":1}}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/financial-institutions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Financial Institution"
+        ],
+        "operationId": "getOrganizationFinancialInstitution",
+        "summary": "Get Organization Financial Institution",
+        "responses": {
+          "200": {
+            "description": "financialInstitution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitution_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"bic\":\"NBBEBEBB203\",\"bulkPaymentsEnabled\":true,\"bulkPaymentsProductTypes\":[\"sepaCreditTransfer\"],\"country\":\"BE\",\"deprecated\":false,\"futureDatedPaymentsAllowed\":true,\"logoUrl\":\"https://ibanity-production-financial-institution-assets.s3.eu-central-1.amazonaws.com/sandbox.svg\",\"maintenanceFrom\":null,\"maintenanceTo\":null,\"maintenanceType\":null,\"name\":\"Super Sandbox Bank\",\"paymentsEnabled\":true,\"paymentsProductTypes\":[\"sepaCreditTransfer\"],\"periodicPaymentsEnabled\":true,\"periodicPaymentsProductTypes\":[\"sepaCreditTransfer\"],\"primaryColor\":\"#7d39ff\",\"secondaryColor\":\"#3DF2C2\",\"sharedBrandName\":null,\"sharedBrandReference\":null,\"status\":\"stable\"},\"id\":\"9251e765-bfbe-48b0-a082-3b043c386131\",\"type\":\"financialInstitution\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/onboarding-details": {
+      "parameters": [],
+      "post": {
+        "tags": [
+          "Onboarding Details"
+        ],
+        "operationId": "createOnboardingDetails",
+        "summary": "Create Onboarding Details",
+        "responses": {
+          "201": {
+            "description": "onboardingDetails",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/onboardingDetails_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"addressCity\":\"Brussels\",\"addressCountry\":\"BE\",\"addressPostalCode\":\"1000\",\"addressStreetAddress\":\"123 Main St\",\"email\":\"jsmith@example.com\",\"enterpriseNumber\":\"0999999999\",\"firstName\":\"Jo\",\"lastName\":\"Smith\",\"organizationName\":\"Smith Ltd\",\"phoneNumber\":\"+32484000000\",\"vatNumber\":\"BE0999999999\"},\"id\":\"4bd59474-10e7-4453-b715-cf6663b01c3c\",\"type\":\"onboardingDetails\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "description": "Email belonging to the onboarding user",
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "description": "First name of the onboarding user",
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "description": "Last name of the onboarding user",
+                    "type": "string"
+                  },
+                  "organizationName": {
+                    "description": "Name of the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "enterpriseNumber": {
+                    "description": "Enterprise number corresponding to the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "vatNumber": {
+                    "description": "VAT number corresponding to the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "addressStreetAddress": {
+                    "description": "Street address of the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "addressCountry": {
+                    "description": "Country of the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "addressPostalCode": {
+                    "description": "Postal code of the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "addressCity": {
+                    "description": "City of the onboarding user's organization",
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "description": "Phone number of the onboarding user",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "onboardingDetails",
+                  "attributes": {
+                    "email": "jsmith@example.com",
+                    "firstName": "Jo",
+                    "lastName": "Smith",
+                    "organizationName": "Smith Ltd",
+                    "enterpriseNumber": "0999999999",
+                    "vatNumber": "BE0999999999",
+                    "addressStreetAddress": "123 Main St",
+                    "addressCountry": "BE",
+                    "addressPostalCode": "1000",
+                    "addressCity": "Brussels",
+                    "phoneNumber": "+32484000000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuthClientCredentials": []
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/integration": {
+      "parameters": [
+        {
+          "name": "organizationId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "delete": {
+        "tags": [
+          "Integration"
+        ],
+        "operationId": "deleteOrganizationIntegration",
+        "summary": "Delete Organization Integration",
+        "responses": {
+          "200": {
+            "description": "integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/integration_single"
+                },
+                "example": "{\"data\":{\"id\":\"ad15e188-9385-44ef-a641-1cce3852c520\",\"relationships\":{\"organization\":{\"data\":{\"id\":\"dd311734-9762-457e-989f-03292a1e55c9\",\"type\":\"organization\"}}},\"type\":\"integration\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuthClientCredentials": []
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/usage/{month}": {
+      "parameters": [
+        {
+          "name": "organizationId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "month",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Usage"
+        ],
+        "operationId": "getOrganizationUsage",
+        "summary": "Get Organization Usage",
+        "responses": {
+          "200": {
+            "description": "usage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/usage_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"accountCount\":0,\"bulkPaymentBundleCount\":0,\"paymentAccountCount\":0,\"paymentCount\":0},\"id\":\"2020-07\",\"relationships\":{\"organization\":{\"data\":{\"id\":\"dd311734-9762-457e-989f-03292a1e55c9\",\"type\":\"organization\"}}},\"type\":\"usage\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuthClientCredentials": []
+          }
+        ]
+      }
+    },
+    "/payment-activation-requests": {
+      "parameters": [],
+      "post": {
+        "tags": [
+          "Payment Activation Request"
+        ],
+        "operationId": "requestPaymentActivation",
+        "summary": "Request Payment Activation",
+        "responses": {
+          "201": {
+            "description": "paymentActivationRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/paymentActivationRequest_single"
+                },
+                "example": "{\"data\":{\"id\":\"55eeab87-3e31-42e5-8865-d628dc90cb14\",\"links\":{\"redirect\":\"https://authorize.development.myponto.net/organizations/dd311734-9762-457e-989f-03292a1e55c9/sandbox/integrations/ad15e188-9385-44ef-a641-1cce3852c520/payment-activation-requests/55eeab87-3e31-42e5-8865-d628dc90cb14\"},\"type\":\"paymentActivationRequest\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "redirectUri": {
+                    "description": "URI that your user will be redirected to at the end of the authorization flow</a>",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "redirectUri"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "paymentActivationRequest",
+                  "attributes": {
+                    "redirectUri": "https://fake-tpp.com/payment-activation-request-confirmation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts": {
+      "parameters": [
+        {
+          "name": "financialInstitutionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Financial Institution Account"
+        ],
+        "operationId": "listFinancialInstitutionAccounts",
+        "summary": "List Financial Institution Accounts",
+        "responses": {
+          "200": {
+            "description": "financialInstitutionAccount",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionAccount_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"availableBalance\":1308.5,\"availableBalanceChangedAt\":\"2022-09-26T13:12:38.896417Z\",\"availableBalanceReferenceDate\":\"2022-09-23T00:00:00Z\",\"currency\":\"EUR\",\"currentBalance\":1308.5,\"currentBalanceChangedAt\":\"2022-09-26T13:12:38.896407Z\",\"currentBalanceReferenceDate\":\"2022-09-23T00:00:00Z\",\"description\":\"Est cum explicabo.\",\"holderName\":null,\"product\":null,\"reference\":\"BE61240504832967\",\"referenceType\":\"IBAN\",\"subtype\":\"checking\"},\"id\":\"2ad1bef3-8bab-445d-865f-bd663f4cfc2d\",\"type\":\"financialInstitutionAccount\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/sandbox/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131/financial-institution-accounts?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/sandbox/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131/financial-institution-accounts?page[after]=2ad1bef3-8bab-445d-865f-bd663f4cfc2d&page[limit]=1\"},\"meta\":{\"paging\":{\"after\":\"2ad1bef3-8bab-445d-865f-bd663f4cfc2d\",\"limit\":1}}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution account resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution account resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{financialInstitutionAccountId}/financial-institution-transactions": {
+      "parameters": [
+        {
+          "name": "financialInstitutionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "financialInstitutionAccountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Financial Institution Transaction"
+        ],
+        "operationId": "listFinancialInstitutionTransactions",
+        "summary": "List Financial Institution Transactions",
+        "responses": {
+          "200": {
+            "description": "financialInstitutionTransaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionTransaction_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"additionalInformation\":\"Online payment on fake-tpp.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"counterpartName\":\"Otro Bank\",\"counterpartReference\":\"BE10732762842104\",\"createdAt\":\"2022-09-26T13:10:48.243384Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Small Cotton Shoes\",\"endToEndId\":\"ref.243435343\",\"executionDate\":\"2022-09-23T00:00:00Z\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12267\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"NEW SHOES\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:10:48.358780Z\",\"valueDate\":\"2022-09-23T00:00:00Z\"},\"id\":\"8f951aa8-e71c-4999-ab3a-d4b88436afaa\",\"type\":\"financialInstitutionTransaction\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/sandbox/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131/financial-institution-accounts/2ad1bef3-8bab-445d-865f-bd663f4cfc2d/financial-institution-transactions?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/sandbox/financial-institutions/9251e765-bfbe-48b0-a082-3b043c386131/financial-institution-accounts/2ad1bef3-8bab-445d-865f-bd663f4cfc2d/financial-institution-transactions?page[after]=8f951aa8-e71c-4999-ab3a-d4b88436afaa&page[limit]=1\"},\"meta\":{\"paging\":{\"after\":\"8f951aa8-e71c-4999-ab3a-d4b88436afaa\",\"limit\":1}}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution transaction resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the financial institution transaction resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Financial Institution Transaction"
+        ],
+        "operationId": "createFinancialInstitutionTransaction",
+        "summary": "Create Financial Institution Transaction",
+        "responses": {
+          "201": {
+            "description": "financialInstitutionTransaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionTransaction_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"additionalInformation\":\"Online payment on fake-tpp.com\",\"amount\":84.42,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"counterpartName\":\"Otro Bank\",\"counterpartReference\":\"BE9786154282554\",\"createdAt\":\"2022-09-26T13:12:39.643384Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Small Cotton Shoes\",\"endToEndId\":\"ref.243435343\",\"executionDate\":\"2020-05-25T00:00:00Z\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12267\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"NEW SHOES\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:12:39.643384Z\",\"valueDate\":\"2020-05-22T00:00:00Z\"},\"id\":\"57e22a2a-4853-4383-8515-7cab2a74160c\",\"type\":\"financialInstitutionTransaction\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "valueDate": {
+                    "description": "Date representing the moment the financial institution transaction is considered effective",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "executionDate": {
+                    "description": "Date representing the moment the financial institution transaction has been recorded",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "amount": {
+                    "description": "Amount of the financial institution transaction. Can be positive or negative",
+                    "type": "number"
+                  },
+                  "currency": {
+                    "description": "Currency of the financial institution transaction, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                    "type": "string"
+                  },
+                  "counterpartName": {
+                    "description": "Legal name of the counterpart. Can only be updated if it was previously not provided (blank).",
+                    "type": "string"
+                  },
+                  "counterpartReference": {
+                    "description": "Number representing the counterpart's account",
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Description of the financial institution transaction",
+                    "type": "string"
+                  },
+                  "remittanceInformation": {
+                    "description": "Content of the remittance information (aka communication)",
+                    "type": "string"
+                  },
+                  "remittanceInformationType": {
+                    "description": "Type of remittance information, can be <code>structured</code> or <code>unstructured</code>",
+                    "type": "string"
+                  },
+                  "endToEndId": {
+                    "description": "Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+                    "type": "string"
+                  },
+                  "purposeCode": {
+                    "description": "Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a>",
+                    "type": "string"
+                  },
+                  "mandateId": {
+                    "description": "Unique reference of the mandate which is signed between the remitter and the debtor",
+                    "type": "string"
+                  },
+                  "creditorId": {
+                    "description": "Identification of the creditor, e.g. a SEPA Creditor ID.",
+                    "type": "string"
+                  },
+                  "additionalInformation": {
+                    "description": "Additional transaction-related information provided from the financial institution to the customer",
+                    "type": "string"
+                  },
+                  "proprietaryBankTransactionCode": {
+                    "description": "Bank transaction code prorietary to the financial institution. Content will vary per financial institution",
+                    "type": "string"
+                  },
+                  "bankTransactionCode": {
+                    "description": "Bank transaction code, based on <a href='https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets'>ISO 20022</a>",
+                    "type": "string"
+                  },
+                  "cardReferenceType": {
+                    "description": "Type of card reference (can be <code>PAN</code> or <code>MASKEDPAN</code>)",
+                    "type": "string"
+                  },
+                  "cardReference": {
+                    "description": "Reference for card related to the transaction (if any). For example the last 4 digits of the card number.",
+                    "type": "string"
+                  },
+                  "fee": {
+                    "description": "A fee that was withheld from this transaction at the financial institution",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "valueDate",
+                  "executionDate",
+                  "amount",
+                  "currency",
+                  "description",
+                  "remittanceInformationType"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "financialInstitutionTransaction",
+                  "attributes": {
+                    "valueDate": "2020-05-22T00:00:00Z",
+                    "executionDate": "2020-05-25T00:00:00Z",
+                    "amount": 84.42,
+                    "currency": "EUR",
+                    "counterpartName": "Otro Bank",
+                    "counterpartReference": "BE9786154282554",
+                    "description": "Small Cotton Shoes",
+                    "remittanceInformation": "NEW SHOES",
+                    "remittanceInformationType": "unstructured",
+                    "endToEndId": "ref.243435343",
+                    "purposeCode": "CASH",
+                    "mandateId": "234",
+                    "creditorId": "123498765421",
+                    "additionalInformation": "Online payment on fake-tpp.com",
+                    "proprietaryBankTransactionCode": "12267",
+                    "bankTransactionCode": "PMNT-IRCT-ESCT",
+                    "cardReferenceType": "MASKEDPAN",
+                    "cardReference": "6666",
+                    "fee": 3.14
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{financialInstitutionAccountId}/financial-institution-transactions/{id}": {
+      "parameters": [
+        {
+          "name": "financialInstitutionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "financialInstitutionAccountId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Financial Institution Transaction"
+        ],
+        "operationId": "getFinancialInstitutionTransaction",
+        "summary": "Get Financial Institution Transaction",
+        "responses": {
+          "200": {
+            "description": "financialInstitutionTransaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionTransaction_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"additionalInformation\":\"Online payment on fake-tpp.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"counterpartName\":\"Otro Bank\",\"counterpartReference\":\"BE10732762842104\",\"createdAt\":\"2022-09-26T13:10:48.243384Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Small Cotton Shoes\",\"endToEndId\":\"ref.243435343\",\"executionDate\":\"2022-09-23T00:00:00Z\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12267\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"NEW SHOES\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:10:48.358780Z\",\"valueDate\":\"2022-09-23T00:00:00Z\"},\"id\":\"8f951aa8-e71c-4999-ab3a-d4b88436afaa\",\"type\":\"financialInstitutionTransaction\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Financial Institution Transaction"
+        ],
+        "operationId": "updateFinancialInstitutionTransaction",
+        "summary": "Update Financial Institution Transaction",
+        "responses": {
+          "200": {
+            "description": "financialInstitutionTransaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionTransaction_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"additionalInformation\":\"Online payment on fake-tpp.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"counterpartName\":\"Otro Bank\",\"counterpartReference\":\"BE30732845884511\",\"createdAt\":\"2022-09-26T13:12:39.738772Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Small Cotton Shoes\",\"endToEndId\":\"ref.243435343\",\"executionDate\":\"2022-09-23T00:00:00Z\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12267\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"NEW SHOES\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:12:39.839725Z\",\"valueDate\":\"2022-09-23T00:00:00Z\"},\"id\":\"ef7ed9cb-1307-4e70-b3ec-7993511b6098\",\"type\":\"financialInstitutionTransaction\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "counterpartName": {
+                    "description": "Legal name of the counterpart. Can only be updated if it was previously not provided (blank).",
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Description of the financial institution transaction",
+                    "type": "string"
+                  },
+                  "remittanceInformation": {
+                    "description": "Content of the remittance information (aka communication)",
+                    "type": "string"
+                  },
+                  "endToEndId": {
+                    "description": "Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+                    "type": "string"
+                  },
+                  "purposeCode": {
+                    "description": "Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a>",
+                    "type": "string"
+                  },
+                  "mandateId": {
+                    "description": "Unique reference of the mandate which is signed between the remitter and the debtor",
+                    "type": "string"
+                  },
+                  "creditorId": {
+                    "description": "Identification of the creditor, e.g. a SEPA Creditor ID.",
+                    "type": "string"
+                  },
+                  "additionalInformation": {
+                    "description": "Additional transaction-related information provided from the financial institution to the customer",
+                    "type": "string"
+                  },
+                  "proprietaryBankTransactionCode": {
+                    "description": "Bank transaction code prorietary to the financial institution. Content will vary per financial institution",
+                    "type": "string"
+                  },
+                  "bankTransactionCode": {
+                    "description": "Bank transaction code, based on <a href='https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets'>ISO 20022</a>",
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "data": {
+                  "type": "financialInstitutionTransaction",
+                  "attributes": {
+                    "counterpartName": "Otro Bank",
+                    "description": "Small Cotton Shoes",
+                    "remittanceInformation": "NEW SHOES",
+                    "endToEndId": "ref.243435343",
+                    "purposeCode": "CASH",
+                    "mandateId": "234",
+                    "creditorId": "123498765421",
+                    "additionalInformation": "Online payment on fake-tpp.com",
+                    "proprietaryBankTransactionCode": "12267",
+                    "bankTransactionCode": "PMNT-IRCT-ESCT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{id}": {
+      "parameters": [
+        {
+          "name": "financialInstitutionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Financial Institution Account"
+        ],
+        "operationId": "getFinancialInstitutionAccount",
+        "summary": "Get Financial Institution Account",
+        "responses": {
+          "200": {
+            "description": "financialInstitutionAccount",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/financialInstitutionAccount_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"availableBalance\":1308.5,\"availableBalanceChangedAt\":\"2022-09-26T13:12:39.085614Z\",\"availableBalanceReferenceDate\":\"2022-09-23T00:00:00Z\",\"currency\":\"EUR\",\"currentBalance\":1308.5,\"currentBalanceChangedAt\":\"2022-09-26T13:12:39.085600Z\",\"currentBalanceReferenceDate\":\"2022-09-23T00:00:00Z\",\"description\":\"Est cum explicabo.\",\"holderName\":null,\"product\":null,\"reference\":\"BE61240504832967\",\"referenceType\":\"IBAN\",\"subtype\":\"checking\"},\"id\":\"2ad1bef3-8bab-445d-865f-bd663f4cfc2d\",\"type\":\"financialInstitutionAccount\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/synchronizations": {
+      "parameters": [],
+      "post": {
+        "tags": [
+          "Synchronization"
+        ],
+        "operationId": "createSynchronization",
+        "summary": "Create Synchronization",
+        "responses": {
+          "201": {
+            "description": "synchronization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/synchronization_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"createdAt\":\"2022-09-26T13:12:40.746Z\",\"errors\":[],\"resourceId\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"resourceType\":\"account\",\"status\":\"pending\",\"subtype\":\"accountDetails\",\"updatedAt\":\"2022-09-26T13:12:40.746Z\"},\"id\":\"5d88f702-fab3-4967-878c-01f1bd990235\",\"type\":\"synchronization\"}}"
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resourceType": {
+                    "description": "Type of the resource to be synchronized. Currently must be <code>account</code>",
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "description": "Identifier of the resource to be synchronized",
+                    "type": "string"
+                  },
+                  "subtype": {
+                    "description": "What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the transactions.",
+                    "type": "string"
+                  },
+                  "customerIpAddress": {
+                    "description": "This must contain the IP address of the customer",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resourceType",
+                  "resourceId",
+                  "subtype",
+                  "customerIpAddress"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "synchronization",
+                  "attributes": {
+                    "resourceType": "account",
+                    "resourceId": "0df6d359-a2fb-4f41-bc4c-3c824d8a1a03",
+                    "subtype": "accountDetails",
+                    "customerIpAddress": "123.123.123.123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/synchronizations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Synchronization"
+        ],
+        "operationId": "getSynchronization",
+        "summary": "Get Synchronization",
+        "responses": {
+          "200": {
+            "description": "synchronization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/synchronization_single"
+                },
+                "example": "{\"data\":{\"attributes\":{\"createdAt\":\"2022-09-26T13:13:02.867Z\",\"errors\":[],\"resourceId\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"resourceType\":\"account\",\"status\":\"success\",\"subtype\":\"accountTransactions\",\"updatedAt\":\"2022-09-26T13:13:03.106Z\"},\"id\":\"9b549e54-f3ea-4cfa-88b3-216c43228cfa\",\"relationships\":{\"updatedTransactions\":{\"links\":{\"meta\":{\"type\":\"transaction\"},\"related\":\"https://api.development.myponto.net/synchronizations/9b549e54-f3ea-4cfa-88b3-216c43228cfa/updated-transactions\"}}},\"type\":\"synchronization\"}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/synchronizations/{synchronizationId}/updated-transactions": {
+      "parameters": [
+        {
+          "name": "synchronizationId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "listUpdatedTransactionsForSynchronization",
+        "summary": "List Updated Transactions for Synchronization",
+        "responses": {
+          "200": {
+            "description": "transaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/transaction_collection"
+                },
+                "example": "{\"data\":[{\"attributes\":{\"additionalInformation\":\"Online payment on bestmarket.com\",\"amount\":-100.0,\"bankTransactionCode\":\"PMNT-IRCT-ESCT\",\"cardReference\":null,\"cardReferenceType\":null,\"counterpartName\":null,\"counterpartReference\":\"BE40732331605463\",\"createdAt\":\"2022-09-26T13:13:15.570Z\",\"creditorId\":\"123498765421\",\"currency\":\"EUR\",\"description\":\"Big Cotton JACKET\",\"digest\":\"ae282110454dcd95d66e6ba081e2db4e442a6beb7cd5598e3a99db5f6aa4e96c\",\"endToEndId\":\"a806047cc24347a5b06fd372db3a811b\",\"executionDate\":\"2022-09-23T00:00:00.000Z\",\"fee\":null,\"internalReference\":\"d32dbe6e-f09c-4deb-80f4-39e61d1e1ace\",\"mandateId\":\"234\",\"proprietaryBankTransactionCode\":\"12345\",\"purposeCode\":\"CASH\",\"remittanceInformation\":\"BIGGER NEW JACKET\",\"remittanceInformationType\":\"unstructured\",\"updatedAt\":\"2022-09-26T13:13:27.056Z\",\"valueDate\":\"2022-09-23T00:00:00.000Z\"},\"id\":\"be64ddb9-63da-4df7-9f7b-ae3a79a7eb25\",\"relationships\":{\"account\":{\"data\":{\"id\":\"0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\",\"type\":\"account\"},\"links\":{\"related\":\"https://api.development.ibanity.net/ponto-connect/accounts/0df6d359-a2fb-4f41-bc4c-3c824d8a1a03\"}}},\"type\":\"transaction\"}],\"links\":{\"first\":\"https://api.development.ibanity.net/ponto-connect/synchronizations/1113f2fb-19c9-4209-8419-fe909243ae47/updated-transactions?page[limit]=1\",\"next\":\"https://api.development.ibanity.net/ponto-connect/synchronizations/1113f2fb-19c9-4209-8419-fe909243ae47/updated-transactions?page[after]=be64ddb9-63da-4df7-9f7b-ae3a79a7eb25&page[limit]=1\"},\"meta\":{\"paging\":{\"after\":\"be64ddb9-63da-4df7-9f7b-ae3a79a7eb25\",\"before\":null,\"limit\":1}}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[limit]",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code>",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[before]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the transaction resources which are immediately before this one in the list (the previous page)",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page[after]",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor for pagination. Indicates that the API should return the transaction resources which are immediately after this one in the list (the next page)",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    },
+    "/userinfo": {
+      "parameters": [],
+      "get": {
+        "tags": [
+          "User Info"
+        ],
+        "operationId": "getUserInfo",
+        "summary": "Get User Info",
+        "responses": {
+          "200": {
+            "description": "userInfo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userInfo_single"
+                },
+                "example": "{\"name\":\"Transcof\",\"onboardingComplete\":true,\"paymentsActivated\":true,\"paymentsActivationRequested\":true,\"representativeOrganizationId\":\"e3979388-b0b8-441b-a629-bcf075100362\",\"representativeOrganizationName\": \"Accountant SA\",\"sub\":\"dd311734-9762-457e-989f-03292a1e55c9\"}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "paymentActivationRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the paymentActivationRequest"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "redirect": {
+                "description": "URI to redirect to from your customer frontend to conduct the authorization flow",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "paymentActivationRequest_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/paymentActivationRequest"
+          }
+        }
+      },
+      "reauthorizationRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the reauthorizationRequest"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      "reauthorizationRequest_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/reauthorizationRequest"
+          }
+        }
+      },
+      "userInfo": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the userInfo"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the organization",
+                "type": "string"
+              },
+              "onboardingComplete": {
+                "description": "Indicates whether the organization has completed the onboarding process in the Ponto dashboard. If not completed within 72 hours of creation, the organization's account information and integration will be automatically deleted from Ponto.",
+                "type": "boolean"
+              },
+              "paymentsActivated": {
+                "description": "Indicates whether the organization can currently sign live payments from Ponto. Must be <code>true</code> to use the (bulk) payment redirect flow.",
+                "type": "boolean"
+              },
+              "paymentsActivationRequested": {
+                "description": "Indicates whether the organization has requested to be able to sign payments from Ponto. If it is <code>false</code> (or you are in the sandbox), you may use the <a href='https://documentation.ibanity.com//api#request-payment-activation'>payment activation request</a> redirect flow.",
+                "type": "boolean"
+              },
+              "representativeOrganizationId": {
+                "description": "ID of the representative organization. Provided if the organization is being accessed via a mandate.",
+                "type": "string",
+                "format": "uuid"
+              },
+              "representativeOrganizationName": {
+                "description": "Name of the representative organization. Provided if the organization is being accessed via a mandate and the <code>name</code> scope was requested.",
+                "type": "string"
+              },
+              "sub": {
+                "description": "ID of the organization corresponding to the provided access token",
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        }
+      },
+      "userInfo_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/userInfo"
+          }
+        }
+      },
+      "usage": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the usage"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "accountCount": {
+                "description": "Number of accounts linked to the integration. The total is prorated, so may be a decimal number if accounts have been linked or unlinked during the month.",
+                "type": "number"
+              },
+              "bulkPaymentBundleCount": {
+                "description": "Number of initiated bulk payment bundles created by the integration",
+                "type": "number"
+              },
+              "paymentAccountCount": {
+                "description": "Number of accounts which initiated a payment created by the integration",
+                "type": "number"
+              },
+              "paymentCount": {
+                "description": "Number of initiated payments created by the integration",
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "usage_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/usage"
+          }
+        }
+      },
+      "onboardingDetails": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the onboardingDetails"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "addressCity": {
+                "description": "City of the onboarding user's organization",
+                "type": "string"
+              },
+              "addressCountry": {
+                "description": "Country of the onboarding user's organization",
+                "type": "string"
+              },
+              "addressPostalCode": {
+                "description": "Postal code of the onboarding user's organization",
+                "type": "string"
+              },
+              "addressStreetAddress": {
+                "description": "Street address of the onboarding user's organization",
+                "type": "string"
+              },
+              "email": {
+                "description": "Email belonging to the onboarding user",
+                "type": "string"
+              },
+              "enterpriseNumber": {
+                "description": "Enterprise number corresponding to the onboarding user's organization",
+                "type": "string"
+              },
+              "firstName": {
+                "description": "First name of the onboarding user",
+                "type": "string"
+              },
+              "lastName": {
+                "description": "Last name of the onboarding user",
+                "type": "string"
+              },
+              "organizationName": {
+                "description": "Name of the onboarding user's organization",
+                "type": "string"
+              },
+              "phoneNumber": {
+                "description": "Phone number of the onboarding user",
+                "type": "string"
+              },
+              "vatNumber": {
+                "description": "VAT number corresponding to the onboarding user's organization",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "onboardingDetails_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/onboardingDetails"
+          }
+        }
+      },
+      "financialInstitutionAccount": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the financialInstitutionAccount"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "availableBalance": {
+                "description": "Amount of financial institution account funds that can be accessed immediately",
+                "type": "number"
+              },
+              "availableBalanceChangedAt": {
+                "description": "When the available balance was changed for the last time. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "availableBalanceReferenceDate": {
+                "description": "Reference date of the available balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "currency": {
+                "description": "Currency of the financial institution account, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                "type": "string"
+              },
+              "currentBalance": {
+                "description": "Total funds currently in the financial institution account",
+                "type": "number"
+              },
+              "currentBalanceChangedAt": {
+                "description": "When the current balance was changed for the last time. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "currentBalanceReferenceDate": {
+                "description": "Reference date of the current balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "description": {
+                "description": "Description of the financial institution account",
+                "type": "string"
+              },
+              "holderName": {
+                "description": "Name of the account holder",
+                "type": "object"
+              },
+              "product": {
+                "description": "Name of the account product",
+                "type": "object"
+              },
+              "reference": {
+                "description": "Financial institution's internal reference for this financial institution account",
+                "type": "string"
+              },
+              "referenceType": {
+                "description": "Type of financial institution reference (can be <code>IBAN</code>, <code>BBAN</code>, <code>email</code>, <code>PAN</code>, <code>MASKEDPAN</code> or <code>MSISDN</code>)",
+                "type": "string"
+              },
+              "subtype": {
+                "description": "Type of financial institution account. Can be <code>checking</code>, <code>savings</code>, <code>securities</code>, <code>card</code> or <code>psp</code>",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "financialInstitutionAccount_collection": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/financialInstitutionAccount"
+            }
+          }
+        }
+      },
+      "financialInstitutionAccount_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/financialInstitutionAccount"
+          }
+        }
+      },
+      "financialInstitutionTransaction": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the financialInstitutionTransaction"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "additionalInformation": {
+                "description": "Additional transaction-related information provided from the financial institution to the customer",
+                "type": "string"
+              },
+              "amount": {
+                "description": "Amount of the financial institution transaction. Can be positive or negative",
+                "type": "number"
+              },
+              "bankTransactionCode": {
+                "description": "Bank transaction code, based on <a href='https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets'>ISO 20022</a>",
+                "type": "string"
+              },
+              "counterpartName": {
+                "description": "Legal name of the counterpart. Can only be updated if it was previously not provided (blank).",
+                "type": "string"
+              },
+              "counterpartReference": {
+                "description": "Number representing the counterpart's account",
+                "type": "string"
+              },
+              "createdAt": {
+                "description": "When this financial institution transaction was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "creditorId": {
+                "description": "Identification of the creditor, e.g. a SEPA Creditor ID.",
+                "type": "string"
+              },
+              "currency": {
+                "description": "Currency of the financial institution transaction, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                "type": "string"
+              },
+              "description": {
+                "description": "Description of the financial institution transaction",
+                "type": "string"
+              },
+              "endToEndId": {
+                "description": "Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+                "type": "string"
+              },
+              "executionDate": {
+                "description": "Date representing the moment the financial institution transaction has been recorded",
+                "type": "string",
+                "format": "date-time"
+              },
+              "mandateId": {
+                "description": "Unique reference of the mandate which is signed between the remitter and the debtor",
+                "type": "string"
+              },
+              "proprietaryBankTransactionCode": {
+                "description": "Bank transaction code prorietary to the financial institution. Content will vary per financial institution",
+                "type": "string"
+              },
+              "purposeCode": {
+                "description": "Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a>",
+                "type": "string"
+              },
+              "remittanceInformation": {
+                "description": "Content of the remittance information (aka communication)",
+                "type": "string"
+              },
+              "remittanceInformationType": {
+                "description": "Type of remittance information, can be <code>structured</code> or <code>unstructured</code>",
+                "type": "string"
+              },
+              "updatedAt": {
+                "description": "When this financial institution transaction was last synchronized successfully. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "valueDate": {
+                "description": "Date representing the moment the financial institution transaction is considered effective",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "financialInstitutionTransaction_collection": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/financialInstitutionTransaction"
+            }
+          }
+        }
+      },
+      "financialInstitutionTransaction_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/financialInstitutionTransaction"
+          }
+        }
+      },
+      "financialInstitution": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the financialInstitution"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "bic": {
+                "description": "Identifier for the financial institution, in <a href='https://en.wikipedia.org/wiki/ISO_9362'>ISO9362</a> format.",
+                "type": "string"
+              },
+              "bulkPaymentsEnabled": {
+                "description": "Indicates whether the financial institution allows bulk payment initiation requests",
+                "type": "boolean"
+              },
+              "bulkPaymentsProductTypes": {
+                "description": "Identifies which values are accepted for the bulk payment initiation request <code>productType</code>",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "country": {
+                "description": "Country of the financial institution, in <a href='https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2'>ISO 3166-1 alpha-2</a> format. Is <code>null</code> in the case of an international financial institution.",
+                "type": "string"
+              },
+              "deprecated": {
+                "description": "Indicates if the financial institution has been deprecated. Very rarely we may need to deprecate a <a href='https://documentation.ibanity.com//api#financial-institution'>financial institution</a> and ask your users to authorize their accounts again on its replacement. You will be able to access both accounts (if authorized) but you will not be able to synchronize the deprecated account once its authorization has expired.",
+                "type": "boolean"
+              },
+              "futureDatedPaymentsAllowed": {
+                "description": "Indicates whether a <code>requestedExecutionDate</code> is supported for <a href='https://documentation.ibanity.com//api#payment'>payments</a> from accounts belonging to this financial institution",
+                "type": "boolean"
+              },
+              "logoUrl": {
+                "description": "Location of the logo image for the financial institution",
+                "type": "string"
+              },
+              "maintenanceFrom": {
+                "description": "Indicates the start date of the maintenance.",
+                "type": "object"
+              },
+              "maintenanceTo": {
+                "description": "Indicates the end date of the maintenance.",
+                "type": "object"
+              },
+              "maintenanceType": {
+                "description": "Indicates if there is an ongoing or scheduled maintenance. If present, the possible values are:<ul><li><code>internal</code>, meaning we are working on the connection and no data access is possible</li><li><code>financialInstitution</code>, indicating the financial institution cannot be reached, but existing data is available in read-only mode</li></ul>",
+                "type": "object"
+              },
+              "name": {
+                "description": "Name of the financial institution",
+                "type": "string"
+              },
+              "paymentsEnabled": {
+                "description": "Indicates whether the financial institution allows <a href='https://documentation.ibanity.com//api#payment-initiation-request'>payment initiation requests</a>",
+                "type": "boolean"
+              },
+              "paymentsProductTypes": {
+                "description": "Identifies which values are accepted for the <a href='https://documentation.ibanity.com//api#payment-initiation-request'>payment initiation request</a> <code>productType</code>",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "periodicPaymentsEnabled": {
+                "description": "Indicates whether the financial institution allows periodic payment initiation requests",
+                "type": "boolean"
+              },
+              "periodicPaymentsProductTypes": {
+                "description": "Identifies which values are accepted for the periodic payment initiation request <code>productType</code>",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "primaryColor": {
+                "description": "Hexadecimal color code related to the primary branding color of the financial institution",
+                "type": "string"
+              },
+              "secondaryColor": {
+                "description": "Hexadecimal color code related to the secondary branding color of the financial institution",
+                "type": "string"
+              },
+              "sharedBrandName": {
+                "description": "Customer-friendly name of the financial institution's shared brand, if it is a member of one",
+                "type": "object"
+              },
+              "sharedBrandReference": {
+                "description": "Attribute used to group multiple individual financial institutions in the same country",
+                "type": "object"
+              },
+              "status": {
+                "description": "Availability of the connection (experimental, beta, stable)",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "financialInstitution_collection": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/financialInstitution"
+            }
+          }
+        }
+      },
+      "financialInstitution_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/financialInstitution"
+          }
+        }
+      },
+      "synchronization": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the synchronization"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this synchronization was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "errors": {
+                "description": "Details of any errors that have occurred during synchronization, due to invalid authorization or technical failure. <a href='https://documentation.ibanity.com//api#sync'>See possible errors</a>",
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "resourceId": {
+                "description": "Identifier of the resource to be synchronized",
+                "type": "string",
+                "format": "uuid"
+              },
+              "resourceType": {
+                "description": "Type of the resource to be synchronized. Currently must be <code>account</code>",
+                "type": "string"
+              },
+              "status": {
+                "description": "Current status of the synchronization, which changes from <code>pending</code> to <code>running</code> to <code>success</code> or <code>error</code>",
+                "type": "string"
+              },
+              "subtype": {
+                "description": "What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the transactions.",
+                "type": "string"
+              },
+              "updatedAt": {
+                "description": "When this synchronization was last synchronized successfully. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "synchronization_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/synchronization"
+          }
+        }
+      },
+      "transaction": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the transaction"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "additionalInformation": {
+                "description": "Additional transaction-related information provided from the financial institution to the customer",
+                "type": "string"
+              },
+              "amount": {
+                "description": "Amount of the transaction. Can be positive or negative",
+                "type": "number"
+              },
+              "bankTransactionCode": {
+                "description": "Bank transaction code, based on <a href='https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets'>ISO 20022</a>",
+                "type": "string"
+              },
+              "cardReference": {
+                "description": "Reference for card related to the transaction (if any). For example the last 4 digits of the card number.",
+                "type": "string"
+              },
+              "cardReferenceType": {
+                "description": "Type of card reference (can be <code>PAN</code> or <code>MASKEDPAN</code>)",
+                "type": "string"
+              },
+              "counterpartName": {
+                "description": "Legal name of the counterpart",
+                "type": "object"
+              },
+              "counterpartReference": {
+                "description": "Number representing the counterpart's account",
+                "type": "string"
+              },
+              "createdAt": {
+                "description": "When this transaction was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "creditorId": {
+                "description": "Identification of the creditor, e.g. a SEPA Creditor ID.",
+                "type": "string"
+              },
+              "currency": {
+                "description": "Currency of the transaction, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                "type": "string"
+              },
+              "description": {
+                "description": "Description of the transaction",
+                "type": "string"
+              },
+              "digest": {
+                "description": "A Base64-encoded SHA-256 digest of the transaction payload from the financial institution. This may NOT be unique if the exact same transaction happens on the same day, on the same account.",
+                "type": "string"
+              },
+              "endToEndId": {
+                "description": "Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.",
+                "type": "string"
+              },
+              "executionDate": {
+                "description": "Date representing the moment the transaction has been recorded",
+                "type": "string",
+                "format": "date-time"
+              },
+              "fee": {
+                "description": "A fee that was withheld from this transaction at the financial institution",
+                "type": "number"
+              },
+              "internalReference": {
+                "description": "Internal resource reference given by the financial institution",
+                "type": "string"
+              },
+              "mandateId": {
+                "description": "Unique reference of the mandate which is signed between the remitter and the debtor",
+                "type": "string"
+              },
+              "proprietaryBankTransactionCode": {
+                "description": "Bank transaction code prorietary to the financial institution. Content will vary per financial institution",
+                "type": "string"
+              },
+              "purposeCode": {
+                "description": "Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a>",
+                "type": "string"
+              },
+              "remittanceInformation": {
+                "description": "Content of the remittance information (aka communication)",
+                "type": "string"
+              },
+              "remittanceInformationType": {
+                "description": "Type of remittance information, can be <code>structured</code> or <code>unstructured</code>",
+                "type": "string"
+              },
+              "updatedAt": {
+                "description": "When this transaction was last synchronized successfully. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "valueDate": {
+                "description": "Date representing the moment the transaction is considered effective",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "transaction_collection": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/transaction"
+            }
+          }
+        }
+      },
+      "transaction_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/transaction"
+          }
+        }
+      },
+      "account": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the account"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "authorizationExpirationExpectedAt": {
+                "description": "When the authorization towards the account is expected to end. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "authorizedAt": {
+                "description": "When the account was authorized for the last time. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "availableBalance": {
+                "description": "Amount of account funds that can be accessed immediately",
+                "type": "number"
+              },
+              "availableBalanceChangedAt": {
+                "description": "When the available balance was changed for the last time. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "availableBalanceReferenceDate": {
+                "description": "Reference date of the available balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "availableBalanceVariationObservedAt": {
+                "description": "Last time that a variation (positive or negative) was detected in our system on the available balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "currency": {
+                "description": "Currency of the account, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                "type": "string"
+              },
+              "currentBalance": {
+                "description": "Total funds currently in the account",
+                "type": "number"
+              },
+              "currentBalanceChangedAt": {
+                "description": "When the current balance was changed for the last time. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "currentBalanceReferenceDate": {
+                "description": "Reference date of the current balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "currentBalanceVariationObservedAt": {
+                "description": "Last time that a variation (positive or negative) was detected in our system on the current balance. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "deprecated": {
+                "description": "Indicates if the account has been deprecated. Very rarely we may need to deprecate a <a href='https://documentation.ibanity.com//api#financial-institution'>financial institution</a> and ask your users to authorize their accounts again on its replacement. You will be able to access both accounts (if authorized) but you will not be able to synchronize the deprecated account once its authorization has expired.",
+                "type": "boolean"
+              },
+              "description": {
+                "description": "Description of the account",
+                "type": "string"
+              },
+              "holderName": {
+                "description": "Name of the account holder",
+                "type": "object"
+              },
+              "internalReference": {
+                "description": "Internal resource reference given by the financial institution",
+                "type": "string"
+              },
+              "product": {
+                "description": "Name of the account product",
+                "type": "object"
+              },
+              "reference": {
+                "description": "Financial institution's internal reference for this account",
+                "type": "string"
+              },
+              "referenceType": {
+                "description": "Type of financial institution reference (can be <code>IBAN</code>, <code>BBAN</code>, <code>email</code>, <code>PAN</code>, <code>MASKEDPAN</code> or <code>MSISDN</code>)",
+                "type": "string"
+              },
+              "subtype": {
+                "description": "Type of account. Can be <code>checking</code>, <code>savings</code>, <code>securities</code>, <code>card</code> or <code>psp</code>",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "account_collection": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/account"
+            }
+          }
+        }
+      },
+      "account_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/account"
+          }
+        }
+      },
+      "payment": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the payment"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "description": "Amount of the payment.",
+                "type": "number"
+              },
+              "creditorAccountReference": {
+                "description": "Financial institution's internal reference for the payee's account",
+                "type": "string"
+              },
+              "creditorAccountReferenceType": {
+                "description": "Type of payee's account reference, currently must be <code>IBAN</code>",
+                "type": "string"
+              },
+              "creditorAgent": {
+                "description": "Reference to the financial institution",
+                "type": "string"
+              },
+              "creditorAgentType": {
+                "description": "Type of financial institution reference, currently must be <code>BIC</code>",
+                "type": "string"
+              },
+              "creditorName": {
+                "description": "Name of the payee. Limited to 60 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution.",
+                "type": "string"
+              },
+              "currency": {
+                "description": "Currency of the payment, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format",
+                "type": "string"
+              },
+              "remittanceInformation": {
+                "description": "Content of the remittance information (aka communication). Limited to 140 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution.",
+                "type": "string"
+              },
+              "remittanceInformationType": {
+                "description": "Type of remittance information, can be <code>structured</code> or <code>unstructured</code>",
+                "type": "string"
+              },
+              "requestedExecutionDate": {
+                "description": "A date in the future when the payment is requested to be executed. The availability of this feature depends on each financial institution. See <a href='https://documentation.ibanity.com//api#financial-institution-attributes'>financial institution attributes</a>. Note that it is not possible to simulate the delayed execution of a payment with the sandbox.",
+                "type": "string",
+                "format": "date"
+              },
+              "status": {
+                "description": "Current status of the payment. <a href='/ponto-connect/products#payment-initiation-workflow'>See possible statuses</a>.",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "payment_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/payment"
+          }
+        }
+      },
+      "bulkPayment": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the bulkPayment"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "batchBookingPreferred": {
+                "description": "<p>Indicates whether the bulk payment transactions should be grouped into one booking entry by the financial institution instead of individual transactions.</p><p>This is a preference that may or may not be taken into account by the financial institution based on availability and the customer's bulk payment contract.</p><p>Defaults to <code>false</code></p>",
+                "type": "boolean"
+              },
+              "reference": {
+                "description": "Your identifier for the bulk payment, displayed to the user in the Ponto dashboard",
+                "type": "string"
+              },
+              "requestedExecutionDate": {
+                "description": "A date in the future when the payment is requested to be executed. The availability of this feature depends on each financial institution. See <a href='https://documentation.ibanity.com//api#financial-institution-attributes'>financial institution attributes</a>. Note that it is not possible to simulate the delayed execution of a payment with the sandbox.",
+                "type": "string",
+                "format": "date"
+              },
+              "status": {
+                "description": "Current status of the bulk payment. <a href='/ponto-connect/products#payment-initiation-workflow'>See possible statuses</a>.",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "bulkPayment_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/bulkPayment"
+          }
+        }
+      },
+      "integration": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the integration"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "organization": {
+                "description": "Details about the corresponding organization",
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "integration_single": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/integration"
+          }
+        }
+      },
+      "accountTransactionsUpdated": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the accountTransactionsUpdated"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "count": {
+                "description": "Number of transactions updated by the synchronization",
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "accountDetailsUpdated": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the accountDetailsUpdated"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "accountTransactionsCreated": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the accountTransactionsCreated"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "count": {
+                "description": "Number of transactions created by the synchronization",
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "synchronizationFailed": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the synchronizationFailed"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "synchronizationSubtype": {
+                "description": "Subtype of the related synchronization",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "synchronizationSucceededWithoutChange": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the synchronizationSucceededWithoutChange"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              },
+              "synchronizationSubtype": {
+                "description": "Subtype of the related synchronization",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "organizationBlocked": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the organizationBlocked"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "organizationUnblocked": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the organizationUnblocked"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "integrationAccountAdded": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the integrationAccountAdded"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "integrationAccountRevoked": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the integrationAccountRevoked"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "integrationRevoked": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the integrationRevoked"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "integrationCreated": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the integrationCreated"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "accountReauthorized": {
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Resource name"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the accountReauthorized"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "description": "When this notification was created. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec",
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oAuth": {
+        "type": "oauth2",
+        "description": "For more info about the user linking flow for Ponto Connect, please refer to the documentation: https://documentation.ibanity.com/ponto-connect/",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://sandbox-authorization.myponto.com/oauth2/auth",
+            "tokenUrl": "/oauth2/token",
+            "scopes": {
+              "ai": "Grant access to account information (balances and transactions)",
+              "pi": "Allow to request payment initiations",
+              "name": "Grant access to the organization's name at the user info endpoing",
+              "offline_access": "Request a long lived refresh token, allowing to access the data for more than 15 minutes (the TTL of an access token)"
+            }
+          }
+        }
+      },
+      "oAuthClientCredentials": {
+        "type": "oauth2",
+        "description": "For more info about the user linking flow for Ponto Connect, please refer to the documentation: https://documentation.ibanity.com/ponto-connect/",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/oauth2/token",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Account",
+      "description": "<p>This is an object representing a user's account. This object will provide details about the account, including the balance and the currency.</p><p>An account has related transactions and belongs to a financial institution.</p><p>An account may be revoked from an integration using the <a href='https://documentation.ibanity.com/ponto-connect/api#revoke-account'>revoke account</a> endpoint. To recover access, the user must add the account back to the integration in their Ponto Dashboard or in a new authorization flow.</p>"
+    },
+    {
+      "name": "Account Details Updated",
+      "description": "A webhook payload delivered whenever a synchronization completes which updates details related to an account, such as the balance."
+    },
+    {
+      "name": "Account Reauthorized",
+      "description": "A webhook payload delivered whenever an account has been reauthorized."
+    },
+    {
+      "name": "Account Transactions Created",
+      "description": "A webhook payload delivered whenever a synchronization completes which has created transactions for an account."
+    },
+    {
+      "name": "Account Transactions Updated",
+      "description": "A webhook payload delivered whenever a synchronization completes which has updated transactions for an account."
+    },
+    {
+      "name": "Bulk Payment",
+      "description": "<p>This is an object representing a bulk payment. When you want to initiate a bulk payment from one of your user's accounts, you have to create one to start the authorization flow.</p><p>If you provide a redirect URI when creating the bulk payment, you will receive a redirect link to send your customer to to start the authorization flow. Note that for live bulk payments, your user must have already requested and been granted payment service for their organization to use this flow.</p><p>Otherwise, the user can sign the bulk payment in the Ponto Dashboard.</p><p>When authorizing bulk payment initiation in the sandbox, you should use the pre-filled credentials and <code>123456</code> as the digipass response.</p>"
+    },
+    {
+      "name": "Financial Institution",
+      "description": "This is an object representing a financial institution, providing its basic details - ID and name. Only the financial institutions corresponding to authorized accounts will be available on the API."
+    },
+    {
+      "name": "Financial Institution Account",
+      "description": "<p>This is an object representing a financial institution account, a fake account you can use for test purposes in a sandbox integration.</p><p>These sandbox accounts are available only to the related organization, and can be authorized in the Ponto dashboard.</p><p>A financial institution account belongs to a <a href='https://documentation.ibanity.com/ponto-connect/api#financial-institution'> financial institution</a> and can have many associated <a href='#financial-institution-transaction'>financial institution transactions</a>.</p>"
+    },
+    {
+      "name": "Financial Institution Transaction",
+      "description": "<p>This is an object representing a financial institution transaction, a fake transaction on a fake account you can create for test purposes.</p><p>Once the account corresponding to the financial institution account has been <a href='https://documentation.ibanity.com/ponto-connect/api#create-synchronization'>synchronized</a>, your custom financial institution transactions will be visible in the <a href='#list-transactions'>transactions list</a>.</p>"
+    },
+    {
+      "name": "Integration",
+      "description": "<p>This endpoint provides an alternative method to revoke the integration (in addition to the <a href='https://documentation.ibanity.com/ponto-connect/api#revoke-refresh-token'>revoke refresh token</a> endpoint). This endpoint remains accessible with a <a href='#request-client-access-token'>client access token</a>, even if your refresh token is lost or expired."
+    },
+    {
+      "name": "Integration Account Added",
+      "description": "A webhook payload delivered whenever an account is added to an integration."
+    },
+    {
+      "name": "Integration Account Revoked",
+      "description": "A webhook payload delivered whenever an account is revoked from an integration."
+    },
+    {
+      "name": "Integration Created",
+      "description": "A webhook payload delivered whenever an integration has been created."
+    },
+    {
+      "name": "Integration Revoked",
+      "description": "A webhook payload delivered whenever an integration has been revoked."
+    },
+    {
+      "name": "Onboarding Details",
+      "description": "<p>This is an object representing the onboarding details of the user who will undergo the linking process. It allows you to prefill the sign in or sign up forms with the user's details to streamline their Ponto onboarding process.</p><p>For security purposes, the onboarding details object will only be available to be linked to a new Ponto user for five minutes following its creation. You should include the <code>id</code> in the access authorization url as an additional query parameter. <a href='/ponto-connect/products#access-authorization'>Read more</a>."
+    },
+    {
+      "name": "Organization Blocked",
+      "description": "A webhook payload delivered whenever an organization has been blocked."
+    },
+    {
+      "name": "Organization Unblocked",
+      "description": "A webhook payload delivered whenever an organization has been unblocked."
+    },
+    {
+      "name": "Payment",
+      "description": "<p>This is an object representing a payment. When you want to initiate payment from one of your user's accounts, you have to create one to start the authorization flow.</p><p>If you provide a redirect URI when creating the payment, you will receive a redirect link to send your customer to to start the authorization flow. Note that for live payments, your user must have already requested and been granted payment service for their organization to use this flow.</p><p>Otherwise, the user can sign the payment in the Ponto Dashboard.</p><p>When authorizing payment initiation in the sandbox, you should use the pre-filled credentials and <code>123456</code> as the digipass response.</p>"
+    },
+    {
+      "name": "Payment Activation Request",
+      "description": "<p>This is an object representing a payment activation request. If your customer has not yet requested payment activation for their organization (as indicated by the <a href='https://documentation.ibanity.com/ponto-connect/api#user-info'>user info endpoint</a>), you can redirect them to Ponto to submit a request for payment activation.<p><p>When creating the payment activation request, you will receive the redirect link in the response. Your customer should be redirected to this url to begin the process. At the end of the flow, they will be returned to the redirect uri that you defined.</p><p>When using this endpoint in the sandbox, the redirection flow will work but the user will not be prompted to request payment activation as this is enabled by default in the sandbox.</p>"
+    },
+    {
+      "name": "Reauthorization Request",
+      "description": "<p>This object allows you to request the reauthorization of a specific bank account.</p><p>By providing a redirect URI, you can create a redirect link to which you can send your customer so they can directly reauthorize their account on Ponto. After reauthorizing at their bank portal, they are redirected automatically back to your application, to the redirect URI of your choosing.</p>"
+    },
+    {
+      "name": "Synchronization",
+      "description": "<p>This is an object representing a resource synchronization. This object will give you the details of the synchronization, including its resource, type, and status.</p>"
+    },
+    {
+      "name": "Synchronization Failed",
+      "description": "A webhook payload delivered whenever a synchronization fails."
+    },
+    {
+      "name": "Synchronization Succeeded Without Change",
+      "description": "A webhook payload delivered whenever a synchronization succeeds but does not change any account details or transactions."
+    },
+    {
+      "name": "Transaction",
+      "description": "<p>This is an object representing an account transaction. This object will give you the details of the financial transaction, including its amount and description.</p><p>From this object, you can link back to its account.</p>"
+    },
+    {
+      "name": "Usage",
+      "description": "<p>This endpoint provides the usage of your integration by the provided organization during a given month. In order to continue to allow access to this information if an integration is revoked, you must use a <a href='https://documentation.ibanity.com/ponto-connect/api#request-client-access-token'>client access token</a> for this endpoint."
+    },
+    {
+      "name": "User Info",
+      "description": "<p>This endpoint provides information about the subject (organization) of an <a href='https://documentation.ibanity.com/ponto-connect/api#access-token'>access token</a>. Minimally, it provides the organization's id as the token's <code>sub</code>. If additional organization information was requested in the scope of the authorization, it will be provided here.</p><p>The organization's id can be used to <a href='#get-organization-usage'>request its usage</a>. Keep in mind that if the access token is revoked, this endpoint will no longer be available, so you may want to store the organization's id in your system."
+    }
+  ]
+}
