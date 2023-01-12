@@ -5,10 +5,12 @@ const generateApiPontoConnect = async () => {
   return generateApi({
     input: path.join(__dirname, '../doc/pontoConnect-open-api-spec.json'),
     output: path.join(__dirname, '../src/client'),
-    name: "pontoConnect",
-    cleanOutput: true
-  })
-}
+    name: 'pontoConnect',
+    cleanOutput: true,
+    generateClient: true,
+    httpClientType: 'axios',
+  });
+};
 
 generateApiPontoConnect()
   .then(() => {
