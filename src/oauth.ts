@@ -62,7 +62,7 @@ export const requestInitialTokens = async (
   }
 ) =>
   httpClient.request({
-    path: '/ponto-connect/oauth2/token',
+    path: '/oauth2/token',
     method: 'POST',
     body: qs({
       grant_type: 'authorization_code',
