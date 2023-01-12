@@ -4,8 +4,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=10"
@@ -18,7 +17,8 @@
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "generate-client": "ts-node -T scripts/generateApi.ts"
+    "generate-client": "ts-node -T scripts/generateApi.ts",
+    "demo": "cd demo && yarn dev"
   },
   "peerDependencies": {},
   "husky": {
@@ -32,16 +32,15 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "mylib",
-  "author": "Florent Detry",
-  "module": "dist/mylib.esm.js",
+  "name": "@igloo-be/ponto-connect-client",
+  "module": "dist/ponto-connect-client.esm.js",
   "size-limit": [
     {
-      "path": "dist/mylib.cjs.production.min.js",
+      "path": "dist/ponto-connect-client.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/mylib.esm.js",
+      "path": "dist/ponto-connect-client.esm.js",
       "limit": "10 KB"
     }
   ],
