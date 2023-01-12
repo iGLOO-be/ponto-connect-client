@@ -10,10 +10,15 @@ const httpsAgent = new https.Agent({
   passphrase: process.env.NEXT_PONTOCONNECT_CERTIFICATEPASSPHRASE,
 });
 
-export const client = new Ponto.Api({
-  httpsAgent,
-});
+export const createClient = (token: string) =>
+  new Ponto.Api({
+    httpsAgent,
+    headers: {
+      Accept: 'application/vnd.api+json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
 export const httpClient = new Ponto.HttpClient({
-  httpsAgent
-})
+  httpsAgent,
+});

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import CryptoJS from 'crypto-js';
+import { generateAuthUrl } from '../../../dist';
 
 export const pontoConnectConfig = {
   client_id: process.env.NEXT_PONTOCONNECT_CLIENTID || '',
@@ -19,26 +20,17 @@ const base64URLEncode = (str: any) => {
 const getChallenge = (verifier: string) =>
   base64URLEncode(CryptoJS.SHA256(verifier));
 
-const generateAuthUrl = () => {
-  const params = {
-    client_id: pontoConnectConfig.client_id,
-    response_type: 'code',
-    redirect_uri: 'http://localhost:3000/api/oauth-callback',
-    response_mode: 'query',
-    scope: pontoConnectConfig.scopes.join(' '),
-    code_challenge: getChallenge(pontoConnectConfig.challenge),
-    code_challenge_method: 'S256',
-    state: 'pontoConnect',
-  };
-  return `${pontoConnectConfig.auth_uri}?${Object.keys(params)
-    .map(p => `${p}=${encodeURIComponent(params[p as keyof typeof params])}`)
-    .join('&')}`;
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const uri = generateAuthUrl();
+  const uri = generateAuthUrl({
+    auth_uri: pontoConnectConfig.auth_uri,
+    client_id: pontoConnectConfig.client_id,
+    code_challenge: getChallenge(pontoConnectConfig.challenge),
+    redirect_uri: 'http://localhost:3000/api/oauth-callback',
+    scopes: pontoConnectConfig.scopes as any,
+    state: 'pontoConnect'
+  });
   res.redirect(uri);
 }

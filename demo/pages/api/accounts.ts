@@ -1,5 +1,5 @@
 import { NextRpcConfig } from 'next-rpc';
-import { client } from '../../lib/client';
+import { createClient } from '../../lib/client';
 import { wrapMethodErrorHandling } from '../../lib/rpcErrorHandling';
 
 export const config: NextRpcConfig = {
@@ -8,15 +8,5 @@ export const config: NextRpcConfig = {
 };
 
 export async function listAccounts(token: string) {
-  return (
-    await client.accounts.listAccounts(
-      {},
-      {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-  ).data;
+  return (await createClient(token).accounts.listAccounts()).data;
 }
