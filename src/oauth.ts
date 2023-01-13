@@ -45,6 +45,14 @@ export const generateAuthUrl = ({
     redirect_uri,
   })}`;
 
+export type TokenResource = {
+  access_token: string
+  expires_in: number
+  refresh_token: string
+  scope: string
+  token_type: string
+}
+
 export const requestInitialTokens = async (
   httpClient: HttpClient<unknown>,
   {
@@ -61,7 +69,7 @@ export const requestInitialTokens = async (
     redirect_uri: string;
   }
 ) =>
-  httpClient.request({
+  httpClient.request<TokenResource>({
     path: '/oauth2/token',
     method: 'POST',
     body: qs({
@@ -69,6 +77,35 @@ export const requestInitialTokens = async (
       code,
       code_verifier,
       redirect_uri,
+      client_id,
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/vnd.api+json',
+      Authorization:
+        'Basic ' +
+        Buffer.from(client_id + ':' + client_secret).toString('base64'),
+    },
+  });
+
+export const requestAccessToken = async (
+  httpClient: HttpClient<unknown>,
+  {
+    refresh_token,
+    client_id,
+    client_secret,
+  }: {
+    refresh_token: string;
+    client_id: string;
+    client_secret: string;
+  }
+) =>
+  httpClient.request<TokenResource>({
+    path: '/oauth2/token',
+    method: 'POST',
+    body: qs({
+      grant_type: 'refresh_token',
+      refresh_token,
       client_id,
     }),
     headers: {
