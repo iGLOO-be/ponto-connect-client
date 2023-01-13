@@ -22,3 +22,10 @@ export const createClient = (token: string) =>
 export const httpClient = new Ponto.HttpClient({
   httpsAgent,
 });
+
+export const requestAccessToken = (token: string) =>
+  Ponto.requestAccessToken(httpClient, {
+    client_id: process.env.NEXT_PONTOCONNECT_CLIENTID || '',
+    client_secret: process.env.NEXT_PONTOCONNECT_CLIENTSECRET || '',
+    refresh_token: token,
+  });
