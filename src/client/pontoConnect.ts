@@ -60,13 +60,6 @@ export interface UserInfo {
     /** Indicates whether the organization has requested to be able to sign payments from Ponto. If it is <code>false</code> (or you are in the sandbox), you may use the <a href='https://documentation.ibanity.com//api#request-payment-activation'>payment activation request</a> redirect flow. */
     paymentsActivationRequested?: boolean;
     /**
-     * ID of the representative organization. Provided if the organization is being accessed via a mandate.
-     * @format uuid
-     */
-    representativeOrganizationId?: string;
-    /** Name of the representative organization. Provided if the organization is being accessed via a mandate and the <code>name</code> scope was requested. */
-    representativeOrganizationName?: string;
-    /**
      * ID of the organization corresponding to the provided access token
      * @format uuid
      */
@@ -89,9 +82,11 @@ export interface Usage {
   attributes?: {
     /** Number of accounts linked to the integration. The total is prorated, so may be a decimal number if accounts have been linked or unlinked during the month. */
     accountCount?: number;
-    /** Number of initiated bulk payment bundles created by the integration */
+    /** <strong>[Deprecated - use <code>bulkPaymentCount</code> instead]</strong>Number of initiated bulk payment bundles created by the integration */
     bulkPaymentBundleCount?: number;
-    /** Number of accounts which initiated a payment created by the integration */
+    /** Number of initiated bulk payment created by the integration */
+    bulkPaymentCount?: number;
+    /** <strong>[Deprecated]</strong>Number of accounts which initiated a payment created by the integration */
     paymentAccountCount?: number;
     /** Number of initiated payments created by the integration */
     paymentCount?: number;
@@ -125,6 +120,11 @@ export interface OnboardingDetails {
     enterpriseNumber?: string;
     /** First name of the onboarding user */
     firstName?: string;
+    /**
+     * Unique identifier of the financial institution that should be preselected during the Ponto onboarding process
+     * @format uuid
+     */
+    initialFinancialInstitutionId?: string;
     /** Last name of the onboarding user */
     lastName?: string;
     /** Name of the onboarding user's organization */
@@ -213,6 +213,10 @@ export interface FinancialInstitutionTransaction {
     amount?: number;
     /** Bank transaction code, based on <a href='https://www.iso20022.org/catalogue-messages/additional-content-messages/external-code-sets'>ISO 20022</a> */
     bankTransactionCode?: string;
+    /** Reference for card related to the transaction (if any). For example the last 4 digits of the card number. */
+    cardReference?: string;
+    /** Type of card reference (can be <code>PAN</code> or <code>MASKEDPAN</code>) */
+    cardReferenceType?: string;
     /** Legal name of the counterpart. Can only be updated if it was previously not provided (blank). */
     counterpartName?: string;
     /** Number representing the counterpart's account */
@@ -228,13 +232,15 @@ export interface FinancialInstitutionTransaction {
     currency?: string;
     /** Description of the financial institution transaction */
     description?: string;
-    /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. */
+    /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
     endToEndId?: string;
     /**
      * Date representing the moment the financial institution transaction has been recorded
      * @format date-time
      */
     executionDate?: string;
+    /** A fee that was withheld from this transaction at the financial institution */
+    fee?: number;
     /** Unique reference of the mandate which is signed between the remitter and the debtor */
     mandateId?: string;
     /** Bank transaction code prorietary to the financial institution. Content will vary per financial institution */
@@ -315,6 +321,8 @@ export interface FinancialInstitution {
     sharedBrandReference?: object;
     /** Availability of the connection (experimental, beta, stable) */
     status?: string;
+    /** Indicates in which time zone the financial institution is located. Eg: <code>Europe/Paris</code>. This field may be empty (null) if the financial institution is located in multiple countries with different time zones */
+    timeZone?: string;
   };
 }
 
@@ -351,7 +359,7 @@ export interface Synchronization {
     resourceType?: string;
     /** Current status of the synchronization, which changes from <code>pending</code> to <code>running</code> to <code>success</code> or <code>error</code> */
     status?: string;
-    /** What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the transactions. */
+    /** What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the settled transactions, and <code>accountTransactionsWithUnsettled</code> is used to synchronize the pending and settled transactions together. */
     subtype?: string;
     /**
      * When this synchronization was last synchronized successfully. Formatted according to <a href='https://en.wikipedia.org/wiki/ISO_8601'>ISO8601</a> spec
@@ -401,7 +409,7 @@ export interface Transaction {
     description?: string;
     /** A Base64-encoded SHA-256 digest of the transaction payload from the financial institution. This may NOT be unique if the exact same transaction happens on the same day, on the same account. */
     digest?: string;
-    /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. */
+    /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
     endToEndId?: string;
     /**
      * Date representing the moment the transaction has been recorded
@@ -548,6 +556,8 @@ export interface Payment {
     creditorName?: string;
     /** Currency of the payment, in <a href='https://en.wikipedia.org/wiki/ISO_4217'>ISO4217</a> format */
     currency?: string;
+    /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
+    endToEndId?: string;
     /** Content of the remittance information (aka communication). Limited to 140 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
     remittanceInformation?: string;
     /** Type of remittance information, can be <code>structured</code> or <code>unstructured</code> */
@@ -609,6 +619,32 @@ export interface Integration {
 
 export interface IntegrationSingle {
   data?: Integration;
+}
+
+export interface IntegrationAccount {
+  /** Resource name */
+  type: string;
+  /**
+   * Unique identifier for the integrationAccount
+   * @format uuid
+   */
+  id: string;
+  attributes?: {
+    /**
+     * <p>When the account was linked to the integration
+     * @format date-time
+     */
+    createdAt?: string;
+    /**
+     * <p>When the account was last accessed through the integration.
+     * @format date-time
+     */
+    lastAccessedAt?: string;
+  };
+}
+
+export interface IntegrationAccountCollection {
+  data?: IntegrationAccount[];
 }
 
 export interface AccountTransactionsUpdated {
@@ -1058,7 +1094,7 @@ export class Api<
         requestedExecutionDate?: string;
         /** <p>Indicates whether the bulk payment transactions should be grouped into one booking entry by the financial institution instead of individual transactions.</p><p>This is a preference that may or may not be taken into account by the financial institution based on availability and the customer's bulk payment contract.</p><p>Defaults to <code>false</code></p> */
         batchBookingPreferred?: boolean;
-        /** <p>List of payment attribute objects to be included in the bulk payment.</p><p>Required attributes are <code>currency</code> (currently must be <code>EUR</code>), <code>amount</code>, <code>creditorName</code>, <code>creditorAccountReference</code>, and <code>creditorAccountReferenceType</code>.</p><p>Optional attributes are <code>remittanceInformation</code>, <code>remittanceInformationType</code>, <code>creditorAgent</code>, and <code>creditorAgentType</code>.</p><p>For more information see the <a href='https://documentation.ibanity.com/ponto-connect/api#create-payment-attributes'>create payment attributes</a></p> */
+        /** <p>List of payment attribute objects to be included in the bulk payment.</p><p>Required attributes are <code>currency</code> (currently must be <code>EUR</code>), <code>amount</code>, <code>creditorName</code>, <code>creditorAccountReference</code>, and <code>creditorAccountReferenceType</code>.</p><p>Optional attributes are <code>remittanceInformation</code>, <code>remittanceInformationType</code>, <code>creditorAgent</code>, <code>creditorAgentType</code> and <code>endToEndId</code>.</p><p>For more information see the <a href='https://documentation.ibanity.com/ponto-connect/api#create-payment-attributes'>create payment attributes</a></p> */
         payments: object[];
       },
       params: RequestParams = {}
@@ -1154,6 +1190,8 @@ export class Api<
         creditorAgentType?: string;
         /** URI that your user will be redirected to at the end of the authorization flow</a> */
         redirectUri?: string;
+        /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
+        endToEndId?: string;
       },
       params: RequestParams = {}
     ) =>
@@ -1373,6 +1411,36 @@ export class Api<
         ...params,
       }),
   };
+  integrationAccounts = {
+    /**
+     * No description
+     *
+     * @tags Integration Account
+     * @name ListIntegrationAccount
+     * @summary List Integration Account
+     * @request GET:/integration-accounts
+     * @secure
+     */
+    listIntegrationAccount: (
+      query?: {
+        /** Maximum number (1-100) of resources that might be returned. It is possible that the response contains fewer elements. Defaults to <code>10</code> */
+        'page[limit]'?: number;
+        /** Cursor for pagination. Indicates that the API should return the integration account resources which are immediately before this one in the list (the previous page) */
+        'page[before]'?: string;
+        /** Cursor for pagination. Indicates that the API should return the integration account resources which are immediately after this one in the list (the next page) */
+        'page[after]'?: string;
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<IntegrationAccountCollection, any>({
+        path: `/integration-accounts`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   onboardingDetails = {
     /**
      * No description
@@ -1407,6 +1475,11 @@ export class Api<
         addressCity?: string;
         /** Phone number of the onboarding user */
         phoneNumber?: string;
+        /**
+         * Unique identifier of the financial institution that should be preselected during the Ponto onboarding process
+         * @format uuid
+         */
+        initialFinancialInstitutionId?: string;
       },
       params: RequestParams = {}
     ) =>
@@ -1590,7 +1663,7 @@ export class Api<
         remittanceInformation?: string;
         /** Type of remittance information, can be <code>structured</code> or <code>unstructured</code> */
         remittanceInformationType: string;
-        /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. */
+        /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
         endToEndId?: string;
         /** Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a> */
         purposeCode?: string;
@@ -1666,7 +1739,7 @@ export class Api<
         description?: string;
         /** Content of the remittance information (aka communication) */
         remittanceInformation?: string;
-        /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. */
+        /** Identifier assigned by the initiating party to identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain. Limited to 35 characters in the set <code>a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 / - ? : ( ) . , ' + Space</code> to ensure it is not rejected by the financial institution. */
         endToEndId?: string;
         /** Purpose code, based on <a href='https://www.iso20022.org/'>ISO 20022</a> */
         purposeCode?: string;
@@ -1731,7 +1804,7 @@ export class Api<
         resourceType: string;
         /** Identifier of the resource to be synchronized */
         resourceId: string;
-        /** What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the transactions. */
+        /** What is being synchronized. Account information such as balance is updated using <code>accountDetails</code>, while <code>accountTransactions</code> is used to synchronize the settled transactions, and <code>accountTransactionsWithUnsettled</code> is used to synchronize the pending and settled transactions together. */
         subtype: string;
         /** This must contain the IP address of the customer */
         customerIpAddress: string;

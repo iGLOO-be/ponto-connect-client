@@ -46,12 +46,12 @@ export const generateAuthUrl = ({
   })}`;
 
 export type TokenResource = {
-  access_token: string
-  expires_in: number
-  refresh_token: string
-  scope: string
-  token_type: string
-}
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+};
 
 export const requestInitialTokens = async (
   httpClient: HttpClient<unknown>,
